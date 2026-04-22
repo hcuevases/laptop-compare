@@ -1,30 +1,52 @@
 import React from 'react';
-import type { Laptop } from '../data/laptops';
+import type { Laptop } from '../types/laptop';
+import { Cpu, Monitor, Layers } from 'lucide-react';
 import './LaptopCard.css';
-import { Plus, Check } from 'lucide-react';
 
 interface LaptopCardProps {
   laptop: Laptop;
-  isCompare: boolean;
-  onCompareToggle: (laptop: Laptop) => void;
+  isSelected: boolean;
+  onToggle: (id: number) => void;
+  selectionCount: number;
 }
 
-const LaptopCard: React.FC<LaptopCardProps> = ({ laptop, isCompare, onCompareToggle }) => {
+const LaptopCard: React.FC<LaptopCardProps> = ({ laptop, isSelected, onToggle, selectionCount }) => {
+  const getScoreColor = (score: number) => {
+    if (score >= 85) return 'var(--score-high)';
+    if (score >= 70) return 'var(--score-mid)';
+    return 'var(--score-low)';
+  };
+
   return (
-    <div className={`laptop-card ${isCompare ? 'selected' : ''}`}>
-      <div className="laptop-image-container">
+    <div className={`laptop-card glass-panel ${isSelected ? 'selected' : ''}`}>
+      <div className="card-header">
         <img src={laptop.image} alt={laptop.name} className="laptop-image" />
+        <div className="overall-score" style={{ borderColor: getScoreColor(laptop.scores?.overall || 0) }}>
+          {laptop.scores?.overall}
+        </div>
       </div>
-      <div className="laptop-info">
-        <span className="laptop-brand">{laptop.brand}</span>
-        <h3 className="laptop-name">{laptop.name}</h3>
-        <p className="laptop-price">${laptop.price}</p>
-        <button 
-          className={`compare-btn ${isCompare ? 'active' : ''}`}
-          onClick={() => onCompareToggle(laptop)}
-        >
-          {isCompare ? <><Check size={18} /> Seleccionado</> : <><Plus size={18} /> Comparar</>}
-        </button>
+      
+      <div className="card-body">
+        <div className="brand-badge">{laptop.brand}</div>
+        <h3>{laptop.name}</h3>
+        <p className="category">{laptop.category}</p>
+        
+        <div className="quick-specs">
+          <div className="spec-item"><Cpu size={16} /> <span>{laptop.specs.cpu.name.split(' ').slice(0, 2).join(' ')}</span></div>
+          <div className="spec-item"><Monitor size={16} /> <span>{laptop.specs.display.size}" {laptop.specs.display.panelType}</span></div>
+          <div className="spec-item"><Layers size={16} /> <span>{laptop.specs.ram.size}GB {laptop.specs.ram.type}</span></div>
+        </div>
+
+        <div className="card-footer">
+          <div className="price">${laptop.price}</div>
+          <button 
+            className={`select-btn ${isSelected ? 'active' : ''}`}
+            onClick={() => onToggle(laptop.id)}
+            disabled={!isSelected && selectionCount >= 4}
+          >
+            {isSelected ? 'Selected' : 'Compare'}
+          </button>
+        </div>
       </div>
     </div>
   );
