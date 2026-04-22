@@ -22,7 +22,7 @@ export const laptops: Laptop[] = [
     storage: "512GB SSD",
     display: "13.6\" Liquid Retina (2560x1664)",
     weight: "1.24 kg",
-    image: "https://images.unsplash.com/photo-1611186871348-b1ec696e52c9?w=400&q=80"
+    image: "https://images.unsplash.com/photo-1517336714460-4c9889a10af5?w=400&q=80"
   },
   {
     id: 2,
