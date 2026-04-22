@@ -11,6 +11,8 @@ interface LaptopCardProps {
 }
 
 const LaptopCard: React.FC<LaptopCardProps> = ({ laptop, isSelected, onToggle, selectionCount }) => {
+  const [imgSrc, setImgSrc] = React.useState(laptop.image);
+
   const getScoreColor = (score: number) => {
     if (score >= 85) return 'var(--score-high)';
     if (score >= 70) return 'var(--score-mid)';
@@ -20,7 +22,12 @@ const LaptopCard: React.FC<LaptopCardProps> = ({ laptop, isSelected, onToggle, s
   return (
     <div className={`laptop-card glass-panel ${isSelected ? 'selected' : ''}`}>
       <div className="card-header">
-        <img src={laptop.image} alt={laptop.name} className="laptop-image" />
+        <img 
+          src={imgSrc} 
+          alt={laptop.name} 
+          className="laptop-image" 
+          onError={() => setImgSrc('https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=600&q=80')}
+        />
         <div className="overall-score" style={{ borderColor: getScoreColor(laptop.scores?.overall || 0) }}>
           {laptop.scores?.overall}
         </div>

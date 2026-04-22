@@ -1,14 +1,29 @@
-import { useState, useMemo } from 'react';
-import { laptops } from './data/laptops';
+import { useState, useMemo, useEffect } from 'react';
+import type { Laptop } from './types/laptop';
 import LaptopCard from './components/LaptopCard';
 import ComparisonTable from './components/ComparisonTable';
-import { Search } from 'lucide-react';
+import { Search, Loader2 } from 'lucide-react';
 import './App.css';
 
 function App() {
+  const [laptops, setLaptops] = useState<Laptop[]>([]);
+  const [loading, setLoading] = useState(true);
   const [selectedIds, setSelectedIds] = useState<number[]>([]);
   const [showComparison, setShowComparison] = useState(false);
   const [searchTerm, setSearchTerm] = useState('');
+
+  useEffect(() => {
+    fetch('./data/laptops.json')
+      .then(res => res.json())
+      .then(data => {
+        setLaptops(data);
+        setLoading(false);
+      })
+      .catch(err => {
+        console.error("Failed to load laptops:", err);
+        setLoading(false);
+      });
+  }, []);
 
   const filteredLaptops = useMemo(() => {
     return laptops.filter(laptop => 
@@ -16,7 +31,7 @@ function App() {
       laptop.brand.toLowerCase().includes(searchTerm.toLowerCase()) ||
       laptop.specs.cpu.name.toLowerCase().includes(searchTerm.toLowerCase())
     );
-  }, [searchTerm]);
+  }, [searchTerm, laptops]);
 
   const toggleCompare = (id: number) => {
     setSelectedIds(prev => 
@@ -49,23 +64,30 @@ function App() {
         </div>
       </section>
 
-      <main className="laptops-grid">
-        {filteredLaptops.length > 0 ? (
-          filteredLaptops.map(laptop => (
-            <LaptopCard 
-              key={laptop.id} 
-              laptop={laptop} 
-              isSelected={selectedIds.includes(laptop.id)}
-              onToggle={toggleCompare}
-              selectionCount={selectedIds.length}
-            />
-          ))
-        ) : (
-          <div style={{gridColumn: '1/-1', textAlign: 'center', padding: '4rem', color: 'var(--text-secondary)'}}>
-            No laptops found matching your search.
-          </div>
-        )}
-      </main>
+      {loading ? (
+        <div className="loading-state">
+          <Loader2 className="animate-spin" size={48} />
+          <p>Loading massive database...</p>
+        </div>
+      ) : (
+        <main className="laptops-grid">
+          {filteredLaptops.length > 0 ? (
+            filteredLaptops.map(laptop => (
+              <LaptopCard 
+                key={laptop.id} 
+                laptop={laptop} 
+                isSelected={selectedIds.includes(laptop.id)}
+                onToggle={toggleCompare}
+                selectionCount={selectedIds.length}
+              />
+            ))
+          ) : (
+            <div style={{gridColumn: '1/-1', textAlign: 'center', padding: '4rem', color: 'var(--text-secondary)'}}>
+              No laptops found matching your search.
+            </div>
+          )}
+        </main>
+      )}
 
       {selectedIds.length > 0 && (
         <div className="selection-tray glass-panel">
