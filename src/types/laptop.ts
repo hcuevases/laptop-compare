@@ -41,6 +41,8 @@ export interface Laptop {
   name: string;
   brand: string;
   price: number;
+  priceEUR: number;
+  amazonUrl: string;
   image: string;
   category: 'Gaming' | 'Ultrabook' | 'Workstation' | 'Budget';
   specs: LaptopSpecs;

@@ -7,6 +7,8 @@ const baseLaptops: Laptop[] = [
     name: "MacBook Air M3",
     brand: "Apple",
     price: 1299,
+    priceEUR: 1199,
+    amazonUrl: "https://www.amazon.es/s?k=macbook+air+m3",
     category: 'Ultrabook',
     image: "https://images.unsplash.com/photo-1517336714460-4c9889a10af5?w=400&q=80",
     specs: {
@@ -25,6 +27,8 @@ const baseLaptops: Laptop[] = [
     name: "Dell XPS 13 (2024)",
     brand: "Dell",
     price: 1149,
+    priceEUR: 1049,
+    amazonUrl: "https://www.amazon.es/s?k=dell+xps+13",
     category: 'Ultrabook',
     image: "https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=400&q=80",
     specs: {
@@ -43,6 +47,8 @@ const baseLaptops: Laptop[] = [
     name: "ROG Zephyrus G14",
     brand: "ASUS",
     price: 1599,
+    priceEUR: 1499,
+    amazonUrl: "https://www.amazon.es/s?k=rog+zephyrus+g14",
     category: 'Gaming',
     image: "https://images.unsplash.com/photo-1541807084-5c52b6b3adef?w=400&q=80",
     specs: {
@@ -61,6 +67,8 @@ const baseLaptops: Laptop[] = [
     name: "Razer Blade 16",
     brand: "Razer",
     price: 2999,
+    priceEUR: 2799,
+    amazonUrl: "https://www.amazon.es/s?k=razer+blade+16",
     category: 'Gaming',
     image: "https://images.unsplash.com/photo-1592434134753-a70baf7979d7?w=400&q=80",
     specs: {

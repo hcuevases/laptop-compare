@@ -1,7 +1,7 @@
 import React from 'react';
 import type { Laptop } from '../types/laptop';
 import './ComparisonTable.css';
-import { X } from 'lucide-react';
+import { X, ExternalLink, ShoppingCart } from 'lucide-react';
 
 interface ComparisonTableProps {
   laptops: Laptop[];
@@ -11,38 +11,52 @@ interface ComparisonTableProps {
 const ComparisonTable: React.FC<ComparisonTableProps> = ({ laptops, onClose }) => {
   if (laptops.length === 0) return null;
 
-  const getBestValue = (keyPath: string[], isLowerBetter = false) => {
+  const getBestValue = (keyPath: string[], type: 'number' | 'resolution' | 'panel' = 'number', isLowerBetter = false) => {
     const values = laptops.map(l => {
       let val: any = l;
-      for (const key of keyPath) {
-        val = val[key];
-      }
+      for (const key of keyPath) { val = val[key]; }
       return val;
     });
 
-    if (values.every(v => typeof v === 'number')) {
-      const best = isLowerBetter ? Math.min(...values) : Math.max(...values);
-      return best;
+    if (type === 'number') {
+      const numValues = values.filter(v => typeof v === 'number');
+      if (numValues.length === 0) return null;
+      return isLowerBetter ? Math.min(...numValues) : Math.max(...numValues);
     }
+
+    if (type === 'resolution') {
+      const pixels = values.map(v => {
+        const parts = v.split('x').map(Number);
+        return parts[0] * parts[1];
+      });
+      return values[pixels.indexOf(Math.max(...pixels))];
+    }
+
+    if (type === 'panel') {
+      const priority = ['OLED', 'Mini-LED', 'IPS', 'VA', 'TN'];
+      const currentIndices = values.map(v => priority.findIndex(p => v.toUpperCase().includes(p)));
+      const bestIndex = Math.min(...currentIndices.filter(i => i !== -1));
+      return values[currentIndices.indexOf(bestIndex)];
+    }
+
     return null;
   };
 
-  const SpecRow = ({ label, keyPath, unit = '', isLowerBetter = false }: { label: string, keyPath: string[], unit?: string, isLowerBetter?: boolean }) => {
-    const bestValue = getBestValue(keyPath, isLowerBetter);
+  const SpecRow = ({ label, keyPath, unit = '', type = 'number', isLowerBetter = false }: { 
+    label: string, keyPath: string[], unit?: string, type?: 'number' | 'resolution' | 'panel', isLowerBetter?: boolean 
+  }) => {
+    const bestValue = getBestValue(keyPath, type, isLowerBetter);
     
     return (
       <tr className="spec-row">
         <td className="spec-label">{label}</td>
         {laptops.map(laptop => {
           let value: any = laptop;
-          for (const key of keyPath) {
-            value = value[key];
-          }
+          for (const key of keyPath) { value = value[key]; }
           const isBest = bestValue !== null && value === bestValue;
           return (
             <td key={laptop.id} className={`spec-value ${isBest ? 'best' : ''}`}>
-              {typeof value === 'boolean' ? (value ? 'Yes' : 'No') : value}
-              {unit}
+              {value}{unit}
             </td>
           );
         })}
@@ -67,23 +81,18 @@ const ComparisonTable: React.FC<ComparisonTableProps> = ({ laptops, onClose }) =
         <div className="table-wrapper">
           <table className="comparison-table">
             <thead>
-              <tr>
-                <th className="sticky-col">Specification</th>
+              <tr className="sticky-header">
+                <th className="sticky-col header-spec">Specification</th>
                 {laptops.map(laptop => (
-                  <th key={laptop.id}>
+                  <th key={laptop.id} className="header-laptop">
                     <img src={laptop.image} alt={laptop.name} className="table-thumb" />
                     <div className="table-name">{laptop.name}</div>
+                    <div className="table-score">Score: {laptop.scores?.overall}</div>
                   </th>
                 ))}
               </tr>
             </thead>
             <tbody>
-              <SectionHeader title="Scores (0-100)" />
-              <SpecRow label="Overall Score" keyPath={['scores', 'overall']} />
-              <SpecRow label="Performance" keyPath={['scores', 'performance']} />
-              <SpecRow label="Display Quality" keyPath={['scores', 'display']} />
-              <SpecRow label="Portability" keyPath={['scores', 'portability']} />
-
               <SectionHeader title="Performance" />
               <SpecRow label="CPU" keyPath={['specs', 'cpu', 'name']} />
               <SpecRow label="Cores / Threads" keyPath={['specs', 'cpu', 'cores']} />
@@ -94,8 +103,8 @@ const ComparisonTable: React.FC<ComparisonTableProps> = ({ laptops, onClose }) =
 
               <SectionHeader title="Display" />
               <SpecRow label="Size" keyPath={['specs', 'display', 'size']} unit='"' />
-              <SpecRow label="Resolution" keyPath={['specs', 'display', 'resolution']} />
-              <SpecRow label="Panel Type" keyPath={['specs', 'display', 'panelType']} />
+              <SpecRow label="Resolution" keyPath={['specs', 'display', 'resolution']} type="resolution" />
+              <SpecRow label="Panel Type" keyPath={['specs', 'display', 'panelType']} type="panel" />
               <SpecRow label="Refresh Rate" keyPath={['specs', 'display', 'refreshRate']} unit="Hz" />
               <SpecRow label="Brightness" keyPath={['specs', 'display', 'brightness']} unit=" nits" />
 
@@ -103,8 +112,25 @@ const ComparisonTable: React.FC<ComparisonTableProps> = ({ laptops, onClose }) =
               <SpecRow label="Battery Capacity" keyPath={['specs', 'battery', 'capacity']} unit=" Wh" />
               <SpecRow label="Weight" keyPath={['specs', 'weight']} unit=" kg" isLowerBetter={true} />
               
-              <SectionHeader title="General" />
-              <SpecRow label="Price" keyPath={['price']} unit="$" isLowerBetter={true} />
+              <SectionHeader title="Pricing & Buy" />
+              <tr className="spec-row">
+                <td className="spec-label">Price USD</td>
+                {laptops.map(l => <td key={l.id} className="spec-value">${l.price}</td>)}
+              </tr>
+              <tr className="spec-row">
+                <td className="spec-label">Price EUR</td>
+                {laptops.map(l => <td key={l.id} className="spec-value">{l.priceEUR}€</td>)}
+              </tr>
+              <tr className="spec-row">
+                <td className="spec-label">Buy Now</td>
+                {laptops.map(l => (
+                  <td key={l.id} className="spec-value">
+                    <a href={l.amazonUrl} target="_blank" rel="noopener noreferrer" className="amazon-link">
+                      <ShoppingCart size={16} /> Amazon <ExternalLink size={12} />
+                    </a>
+                  </td>
+                ))}
+              </tr>
             </tbody>
           </table>
         </div>
