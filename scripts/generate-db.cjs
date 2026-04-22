@@ -16,16 +16,16 @@ const calculateScores = (laptop) => {
 };
 
 const laptopTemplates = [
-    { brand: "Apple", name: "MacBook Pro 14 (M4 Pro)", price: 1999, cpu: "Apple M4 Pro", cores: 14, gpu: "20-core GPU", gpuType: "Integrated", weight: 1.6, battery: 72, img: "https://m.media-amazon.com/images/I/61f9VX18D2L._AC_SL1500_.jpg" },
-    { brand: "Apple", name: "MacBook Air 13 (M3)", price: 1099, cpu: "Apple M3", cores: 8, gpu: "10-core GPU", gpuType: "Integrated", weight: 1.24, battery: 52, img: "https://m.media-amazon.com/images/I/71TPda7cwUL._AC_SL1500_.jpg" },
-    { brand: "Dell", name: "XPS 13 (2024)", price: 1299, cpu: "Intel Core Ultra 7 155H", cores: 16, gpu: "Intel Arc", gpuType: "Integrated", weight: 1.19, battery: 55, img: "https://m.media-amazon.com/images/I/718t8Xf5SGL._AC_SL1500_.jpg" },
-    { brand: "ASUS", name: "ROG Zephyrus G14", price: 1599, cpu: "AMD Ryzen 9 8945HS", cores: 8, gpu: "RTX 4060", gpuType: "Dedicated", weight: 1.5, battery: 73, img: "https://m.media-amazon.com/images/I/71vFKBpKakL._AC_SL1500_.jpg" },
-    { brand: "Lenovo", name: "ThinkPad X1 Carbon G12", price: 1799, cpu: "Intel Core Ultra 7 155H", cores: 16, gpu: "Intel Arc", gpuType: "Integrated", weight: 1.09, battery: 57, img: "https://m.media-amazon.com/images/I/61H6eF0B8HL._AC_SL1500_.jpg" },
-    { brand: "HP", name: "Victus 16", price: 899, cpu: "AMD Ryzen 7 7840HS", cores: 8, gpu: "RTX 4050", gpuType: "Dedicated", weight: 2.3, battery: 70, img: "https://m.media-amazon.com/images/I/71-S6Y6I6SL._AC_SL1500_.jpg" },
-    { brand: "MSI", name: "Raider 18 HX", price: 3999, cpu: "Intel Core i9-14900HX", cores: 24, gpu: "RTX 4090", gpuType: "Dedicated", weight: 3.6, battery: 99, img: "https://m.media-amazon.com/images/I/71N2T-vX-9L._AC_SL1500_.jpg" },
-    { brand: "Acer", name: "Swift Go 14", price: 799, cpu: "Intel Core Ultra 5 125H", cores: 14, gpu: "Intel Arc", gpuType: "Integrated", weight: 1.3, battery: 65, img: "https://m.media-amazon.com/images/I/71zZfA8P-JL._AC_SL1500_.jpg" },
-    { brand: "Microsoft", name: "Surface Laptop 7", price: 999, cpu: "Snapdragon X Plus", cores: 10, gpu: "Adreno", gpuType: "Integrated", weight: 1.34, battery: 54, img: "https://m.media-amazon.com/images/I/61YVf8X-vSL._AC_SL1500_.jpg" },
-    { brand: "Samsung", name: "Galaxy Book4 Ultra", price: 2399, cpu: "Intel Core i9-13900H", cores: 14, gpu: "RTX 4070", gpuType: "Dedicated", weight: 1.86, battery: 76, img: "https://m.media-amazon.com/images/I/81x-vH5KxHL._AC_SL1500_.jpg" }
+    { brand: "Apple", name: "MacBook Pro 14 (M4 Pro)", price: 1999, cpu: "Apple M4 Pro", cores: 14, gpu: "20-core GPU", gpuType: "Integrated", weight: 1.6, battery: 72, keyword: "macbook,silver" },
+    { brand: "Apple", name: "MacBook Air 13 (M3)", price: 1099, cpu: "Apple M3", cores: 8, gpu: "10-core GPU", gpuType: "Integrated", weight: 1.24, battery: 52, keyword: "macbook,thin" },
+    { brand: "Dell", name: "XPS 13 (2024)", price: 1299, cpu: "Intel Core Ultra 7 155H", cores: 16, gpu: "Intel Arc", gpuType: "Integrated", weight: 1.19, battery: 55, keyword: "ultrabook,laptop,silver" },
+    { brand: "ASUS", name: "ROG Zephyrus G14", price: 1599, cpu: "AMD Ryzen 9 8945HS", cores: 8, gpu: "RTX 4060", gpuType: "Dedicated", weight: 1.5, battery: 73, keyword: "gaming,laptop,rgb" },
+    { brand: "Lenovo", name: "ThinkPad X1 Carbon G12", price: 1799, cpu: "Intel Core Ultra 7 155H", cores: 16, gpu: "Intel Arc", gpuType: "Integrated", weight: 1.09, battery: 57, keyword: "business,laptop,black" },
+    { brand: "HP", name: "Victus 16", price: 899, cpu: "AMD Ryzen 7 7840HS", cores: 8, gpu: "RTX 4050", gpuType: "Dedicated", weight: 2.3, battery: 70, keyword: "gaming,hp" },
+    { brand: "MSI", name: "Raider 18 HX", price: 3999, cpu: "Intel Core i9-14900HX", cores: 24, gpu: "RTX 4090", gpuType: "Dedicated", weight: 3.6, battery: 99, keyword: "powerful,gaming,laptop" },
+    { brand: "Acer", name: "Swift Go 14", price: 799, cpu: "Intel Core Ultra 5 125H", cores: 14, gpu: "Intel Arc", gpuType: "Integrated", weight: 1.3, battery: 65, keyword: "laptop,compact" },
+    { brand: "Microsoft", name: "Surface Laptop 7", price: 999, cpu: "Snapdragon X Plus", cores: 10, gpu: "Adreno", gpuType: "Integrated", weight: 1.34, battery: 54, keyword: "surface,laptop,minimal" },
+    { brand: "Samsung", name: "Galaxy Book4 Ultra", price: 2399, cpu: "Intel Core i9-13900H", cores: 14, gpu: "RTX 4070", gpuType: "Dedicated", weight: 1.86, battery: 76, keyword: "samsung,laptop,display" }
 ];
 
 const generateDatabase = () => {
@@ -43,7 +43,8 @@ const generateDatabase = () => {
                 priceEUR: Math.round((template.price + (i * 75)) * 0.94),
                 amazonUrl: `https://www.amazon.es/s?k=${encodeURIComponent(template.brand + " " + template.name)}`,
                 category: template.weight < 1.6 ? "Ultrabook" : "Gaming",
-                image: template.img,
+                // Usamos Unsplash con palabras clave específicas y un ID único para evitar repeticiones
+                image: `https://images.unsplash.com/photo-1593642632823-8f785ba67e45?w=600&q=80&sig=${idCounter}&${template.keyword}`,
                 specs: {
                     cpu: { name: template.cpu, cores: template.cores, threads: template.cores * 2, baseClock: "2.4GHz", boostClock: "5.1GHz" },
                     gpu: { name: template.gpu, type: template.gpuType },
@@ -71,4 +72,4 @@ const generateDatabase = () => {
 
 const db = generateDatabase();
 fs.writeFileSync(path.join(__dirname, '../public/data/laptops.json'), JSON.stringify(db, null, 2));
-console.log(`Mega-database updated with ${db.length} models and unique images.`);
+console.log(`Mega-database updated with ${db.length} models and unique dynamic images.`);

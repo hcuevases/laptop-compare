@@ -85,7 +85,14 @@ const ComparisonTable: React.FC<ComparisonTableProps> = ({ laptops, onClose }) =
                 <th className="sticky-col header-spec">Specification</th>
                 {laptops.map(laptop => (
                   <th key={laptop.id} className="header-laptop">
-                    <img src={laptop.image} alt={laptop.name} className="table-thumb" />
+                    <img 
+                      src={laptop.image} 
+                      alt={laptop.name} 
+                      className="table-thumb" 
+                      onError={(e) => {
+                        (e.target as HTMLImageElement).src = 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=400&q=80';
+                      }}
+                    />
                     <div className="table-name">{laptop.name}</div>
                     <div className="table-score">Score: {laptop.scores?.overall}</div>
                   </th>
