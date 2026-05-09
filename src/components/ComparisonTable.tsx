@@ -23,16 +23,22 @@ const getBestValue = (laptops: Laptop[], keyPath: string[], type: 'number' | 're
 
   if (type === 'resolution') {
     const pixels = values.map(v => {
+      if (typeof v !== 'string') return 0;
       const parts = v.split('x').map(Number);
-      return parts[0] * parts[1];
+      return parts.length === 2 ? parts[0] * parts[1] : 0;
     });
     return values[pixels.indexOf(Math.max(...pixels))];
   }
 
   if (type === 'panel') {
     const priority = ['OLED', 'Mini-LED', 'IPS', 'VA', 'TN'];
-    const currentIndices = values.map(v => priority.findIndex(p => v.toUpperCase().includes(p)));
-    const bestIndex = Math.min(...currentIndices.filter(i => i !== -1));
+    const currentIndices = values.map(v => {
+      if (typeof v !== 'string') return -1;
+      return priority.findIndex(p => v.toUpperCase().includes(p));
+    });
+    const validIndices = currentIndices.filter(i => i !== -1);
+    if (validIndices.length === 0) return null;
+    const bestIndex = Math.min(...validIndices);
     return values[currentIndices.indexOf(bestIndex)];
   }
 
