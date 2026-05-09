@@ -26,7 +26,13 @@ const LaptopCard: React.FC<LaptopCardProps> = ({ laptop, isSelected, onToggle, s
           src={imgSrc} 
           alt={laptop.name} 
           className="laptop-image" 
-          onError={() => setImgSrc('https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=600&q=80')}
+          loading="lazy"
+          onError={() => {
+            const fallback = 'https://images.unsplash.com/photo-1588872657578-7efd1f1555ed?w=600&q=80';
+            if (imgSrc !== fallback) {
+              setImgSrc(fallback);
+            }
+          }}
         />
         <div className="overall-score" style={{ borderColor: getScoreColor(laptop.scores?.overall || 0) }}>
           {laptop.scores?.overall}

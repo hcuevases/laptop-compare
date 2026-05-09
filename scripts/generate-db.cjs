@@ -72,7 +72,7 @@ const generateDatabase = () => {
                 priceEUR: Math.round((template.price + (i * 75)) * 0.94),
                 amazonUrl: `https://www.amazon.es/s?k=${encodeURIComponent(template.brand + " " + template.name)}`,
                 category: template.weight < 1.6 ? "Ultrabook" : "Gaming",
-                image: `https://images.unsplash.com/photo-${photoId}?w=600&q=80`, // URL de Unsplash con ID específico
+                image: `https://images.unsplash.com/photo-${photoId}?w=800&q=90`, // Mejor resolución y calidad
                 specs: {
                     cpu: { name: template.cpu, cores: template.cores, threads: template.cores * 2, baseClock: "2.4GHz", boostClock: "5.1GHz" },
                     gpu: { name: template.gpu, type: template.gpuType },
