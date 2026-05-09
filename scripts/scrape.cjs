@@ -5,18 +5,24 @@ const path = require('path');
 
 // Reutilizamos la lógica de scoring en el script (simplificada para JS)
 const calculateScores = (laptop) => {
-  const cpuScore = laptop.specs.cpu.cores * 5 + (laptop.specs.gpu.type === 'Dedicated' ? 30 : 10);
-  const ramScore = laptop.specs.ram.size * 2;
-  const performance = Math.min(100, Math.round((cpuScore + ramScore) * 1.2));
+  // Performance: Basado en CPU y RAM
+  const cpuPower = (laptop.specs.cpu.cores * 10) + (laptop.specs.gpu.type === 'Dedicated' ? 40 : 10);
+  const ramBonus = laptop.specs.ram.size * 2;
+  const performance = Math.min(100, Math.round((cpuPower + ramBonus) * 0.8));
 
-  const brightnessScore = (laptop.specs.display.brightness / 500) * 40;
-  const hzScore = (laptop.specs.display.refreshRate / 120) * 30;
-  const resScore = laptop.specs.display.resolution.includes('3840') || laptop.specs.display.resolution.includes('4K') ? 30 : 20;
-  const display = Math.min(100, Math.round(brightnessScore + hzScore + resScore));
+  // Display: Brillo, Panel y Refresco
+  const panelBonus = laptop.specs.display.panelType.toUpperCase().includes('OLED') ? 40 : 20;
+  const hzBonus = (laptop.specs.display.refreshRate / 120) * 30;
+  const brightnessBonus = (laptop.specs.display.brightness / 500) * 30;
+  const display = Math.min(100, Math.round(panelBonus + hzBonus + brightnessBonus));
 
-  const portability = Math.min(100, Math.round(100 - (laptop.specs.weight * 25)));
-  const battery = Math.min(100, Math.round((laptop.specs.battery.capacity / 100) * 100));
-  const overall = Math.round((performance + display + portability + battery) / 4);
+  // Portability: Inverso al peso
+  const portability = Math.min(100, Math.round(100 - (laptop.specs.weight * 20)));
+
+  // Battery: Wh
+  const battery = Math.min(100, Math.round((laptop.specs.battery.capacity / 99) * 100));
+
+  const overall = Math.round((performance * 0.4) + (display * 0.3) + (portability * 0.15) + (battery * 0.15));
 
   return { performance, display, portability, battery, overall };
 };

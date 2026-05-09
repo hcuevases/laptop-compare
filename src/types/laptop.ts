@@ -34,6 +34,11 @@ export interface LaptopSpecs {
   };
   ports: string[];
   weight: number; // in kg
+  benchmarks?: {
+    cinebenchR23?: number;
+    geekbench6Multi?: number;
+    pcMark10?: number;
+  };
 }
 
 export interface Laptop {
@@ -46,7 +51,7 @@ export interface Laptop {
   image: string;
   category: 'Gaming' | 'Ultrabook' | 'Workstation' | 'Budget';
   specs: LaptopSpecs;
-  scores?: {
+  scores: {
     performance: number;
     display: number;
     portability: number;
