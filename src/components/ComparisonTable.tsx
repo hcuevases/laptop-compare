@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import type { Laptop } from '../types/laptop';
 import './ComparisonTable.css';
-import { X, ExternalLink, ShoppingCart, Award, Zap, Monitor, Battery, ChevronRight } from 'lucide-react';
+import { X, ShoppingCart, Award, Zap, Monitor, Battery, ChevronRight } from 'lucide-react';
 
 interface ComparisonTableProps {
   laptops: Laptop[];
